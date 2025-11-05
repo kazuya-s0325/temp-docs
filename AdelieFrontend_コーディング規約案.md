@@ -6,14 +6,14 @@
   - [0. 全体方針](#0-全体方針)
     - [0.1 プロジェクト全体設定](#01-プロジェクト全体設定)
     - [0.2 GitHub運用方法](#02-github運用方法)
-  - [1.1 ディレクトリ構成 \[MUST\]](#11-ディレクトリ構成-must)
+  - [1.1 ディレクトリ構成](#11-ディレクトリ構成)
     - [ルール](#ルール)
   - [1.2 命名規約](#12-命名規約)
     - [1.2.1 全般](#121-全般)
     - [1.2.2 コンポーネントについて](#122-コンポーネントについて)
     - [1.2.3 propsについて](#123-propsについて)
     - [1.2.4 emit/イベント名について](#124-emitイベント名について)
-    - [1.2.5 router名について \[MUST\]](#125-router名について-must)
+    - [1.2.5 router名について](#125-router名について)
     - [1.2.6 基底コンポーネント](#126-基底コンポーネント)
     - [1.2.7 密結合コンポーネント](#127-密結合コンポーネント)
 - [2. コーディングスタイル](#2-コーディングスタイル)
@@ -96,12 +96,12 @@
 - **[MUST]** `main`/`master`ブランチへの直コミットはしてはならない
   - `main`/`master`への直コミットを行うと以下の問題が発生するため禁止とする
 
-  | 問題点                         | 説明                                                                                                                                                                                                          |
-  | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | レビューがスキップされる       | 誰もコードレビューしないまま本番へ即反映されるため                                                                                                                                                            |
-  | 履歴が汚染される               | 修正・試行錯誤・「typoを修正」といった全コミットが全部`main`/`master`に乗ってしまう<br>→ `git log`が肥大化して過去解析が難しくなる                                                                            |
-  | ほかブランチとの競合が発生する | 他の開発者が`feature/*`ブランチを切っても`main/master`が直接進むせいで、本来は不要なはずの`rebase`や`merge`を行わなければならない事態が頻発する                                                               |
-  | 本番事故リスクがある           | 運用フェーズに入ったさい、`main`/`master`はデプロイ対象であるため、直コミット = 本番に未レビューのコードが即入り込む<br> → デグレや障害の特定が難しくなる、開発段階で直コミットはしないくせをつけることが重要 |
+    | 問題点                         | 説明                                                                                                                                                                                                          |
+    | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | レビューがスキップされる       | 誰もコードレビューしないまま本番へ即反映されるため                                                                                                                                                            |
+    | 履歴が汚染される               | 修正・試行錯誤・「typoを修正」といった全コミットが全部`main`/`master`に乗ってしまう<br>→ `git log`が肥大化して過去解析が難しくなる                                                                            |
+    | ほかブランチとの競合が発生する | 他の開発者が`feature/*`ブランチを切っても`main/master`が直接進むせいで、本来は不要なはずの`rebase`や`merge`を行わなければならない事態が頻発する                                                               |
+    | 本番事故リスクがある           | 運用フェーズに入ったさい、`main`/`master`はデプロイ対象であるため、直コミット = 本番に未レビューのコードが即入り込む<br> → デグレや障害の特定が難しくなる、開発段階で直コミットはしないくせをつけることが重要 |
 
 - **[SHOULD]** 各ブランチの種類とその役割は以下のように定義する
 
@@ -167,20 +167,22 @@
   - FEとBEの変更履歴が完全に別れるため、`git log`での過去解析がしやすくなる
   - また`git clone`時の時間短縮にもつながる
 
-## 1.1 ディレクトリ構成 [MUST]
-```bash
-src/
-├── api/         # API呼び出し系 (axiosラッパーなど)
-├── assets/      # 画像・フォント・CSSなど
-├── components/  # 再利用コンポーネント（共通部品）
-├── composables/ # Composition APIロジック
-├── router/      # router
-├── store/       # Piniaストア
-├── tests/       # Vitest
-├── types/       # TypeScript型定義
-├── utils/       # 共通関数
-└── views/       # 画面単位のVue
-```
+## 1.1 ディレクトリ構成
+- **[MUST]** viteプロジェクトのディレクトリ構成は以下のとおりとする
+
+  ```bash
+  src/
+  ├── api/         # API呼び出し系 (axiosラッパーなど)
+  ├── assets/      # 画像・フォント・CSSなど
+  ├── components/  # 再利用コンポーネント（共通部品）
+  ├── composables/ # Composition APIロジック
+  ├── router/      # router
+  ├── store/       # Piniaストア
+  ├── tests/       # Vitest
+  ├── types/       # TypeScript型定義
+  ├── utils/       # 共通関数
+  └── views/       # 画面単位のVue
+  ```
 ### ルール
 - **[MUST]** `components/` 下は機能単位でサブディレクトリを切る
   - e.g.`components/user/UserForm.vue`, `components/user/UserList.vue`
@@ -201,30 +203,30 @@ src/
   | 定数             | UPPER_SNAKE_CASE             | API_BASE_URL                      |
   | 型               | PascalCase + `type` or `DTO` | UserInfoType, UserLoginRequestDTO |
 
-- **[MUST]** 略語は広く一般的に用いられているものを除き、基本的には使用しないこと
-  - エディタの補完機能があるので、そもそも略す必要性は薄い
+- **[MUST]** 略語は広く一般的に用いられているものを除いて、基本的には使用しないこと
+  - エディタの補完機能があるので、そもそも省略する必要性は薄い
   - 特に略すことで2通り以上の意味に取れてしまいかねないものは絶対に使用しない
     - 例: `dt` → `date`と`data`で混同する
 
 - **[MUST]** ハンガリアン記法は使用しない、あくまでも意味ベースでの命名を意識する
   - 型についてはTypeScriptが参照する、また型情報の提供はIDE側で行われるので変数名に含める必要性は無い
 
-  **TypeScript全般の例:**
-  | BAD           | GOOD                    | 理由                                         |
-  | ------------- | ----------------------- | -------------------------------------------- |
-  | `strName`     | `name: string`          | 型はTypeScriptがもつ、名前は「意味」をもつ   |
-  | `iCount`      | `count: number`         | 同上                                         |
-  | `bIsActive`   | `isActive: boolean`     | 真偽値は`is`/`has`/`can`/`should`で始める    |
-  | `objResponse` | `response: ApiResponse` | オブジェクトの命名は意味名で、型の定義も行う |
-  | `tblUserMst`  | `userMaster`            | DB種別は名前に含めない                       |
+    **TypeScript全般の例:**
+    | BAD           | GOOD                    | 理由                                         |
+    | ------------- | ----------------------- | -------------------------------------------- |
+    | `strName`     | `name: string`          | 型はTypeScriptがもつ、名前は「意味」をもつ   |
+    | `iCount`      | `count: number`         | 同上                                         |
+    | `bIsActive`   | `isActive: boolean`     | 真偽値は`is`/`has`/`can`/`should`で始める    |
+    | `objResponse` | `response: ApiResponse` | オブジェクトの命名は意味名で、型の定義も行う |
+    | `tblUserMst`  | `userMaster`            | DB種別は名前に含めない                       |
 
-  **vueテンプレート内のUI要素の例:**
-  | BAD                  | GOOD                     | 理由                                     |
-  | -------------------- | ------------------------ | ---------------------------------------- |
-  | txtShohinName        | `shohinName`             | UI型を外して役割だけにする               |
-  | cmdSearch, btnSearch | `search`, `searchAction` | ボタン程度なら`*Action`程度は可          |
-  | selCategory          | `category`               | UI型を外す、select→radioへの変更に耐える |
-  | lblError             | `errorMessage`           | 読み手に意味が伝わる                     |
+    **vueテンプレート内のUI要素の例:**
+    | BAD                  | GOOD                     | 理由                                     |
+    | -------------------- | ------------------------ | ---------------------------------------- |
+    | txtShohinName        | `shohinName`             | UI型を外して役割だけにする               |
+    | cmdSearch, btnSearch | `search`, `searchAction` | ボタン程度なら`*Action`程度は可          |
+    | selCategory          | `category`               | UI型を外す、select→radioへの変更に耐える |
+    | lblError             | `errorMessage`           | 読み手に意味が伝わる                     |
 
 ### 1.2.2 コンポーネントについて
 - **[MUST]** import時は `PascalCase` とする
@@ -257,18 +259,20 @@ src/
   <user-card @user-clicked="onUserClicked" />
   ```
 
-### 1.2.5 router名について [MUST]
-| 対象       | 規則       | 例         |
-| ---------- | ---------- | ---------- |
-| route name | PascalCase | UserList   |
-| path       | kebab-case | /user-list |
-```ts
-{
-  path: '/user-list',
-  name: 'UserList',
-  component: () => import('@/views/UserList.vue')
-}
-```
+### 1.2.5 router名について
+- **[MUST]** `vue router`の命名規則は以下とする
+
+  | 対象       | 規則       | 例         |
+  | ---------- | ---------- | ---------- |
+  | route name | PascalCase | UserList   |
+  | path       | kebab-case | /user-list |
+  ```ts
+  {
+    path: '/user-list',
+    name: 'UserList',
+    component: () => import('@/views/UserList.vue')
+  }
+  ```
 
 ### 1.2.6 基底コンポーネント
 - **[SHOULD]** 基底コンポーネント（アプリ特有のスタイルやルールを適用するコンポーネント）には `Base` prefixをつけて命名する
@@ -351,18 +355,18 @@ src/
   ```
 
 #### 関数
-- **[MUST]** 関数リテラルにはアロー関数を使用する
+- **[MUST]** 関数リテラルには原則アロー関数を使用する
   - アロー関数は見た目がシンプルで見通しが良くなるだけでなく、`this`がレキシカルスコープに束縛され、バグを防止効果を期待できる
   - 例外として、クラスメソッド定義や外部ライブラリで明示的な`this`バインディングが必要な場合はこの限りではない
 
-  ```ts
-  // 即時関数やコールバックなどはアロー関数で統一
-  const users = list.map(user => user.name);
+    ```ts
+    // 即時関数やコールバックなどはアロー関数で統一
+    const users = list.map(user => user.name);
 
-  const handleClick = (event: MouseEvent) => {
-    console.log(event.target);
-  };
-  ```
+    const handleClick = (event: MouseEvent) => {
+      console.log(event.target);
+    };
+    ```
 
 
 ### 非同期処理
@@ -440,66 +444,66 @@ src/
   - コードの見通しが悪くなるだけでなく、grep時にノイズとなり調査の手間が増える
   - 何らかの事情で意図的に残す場合は、必ずコメントに理由と削除する基準を明確に記載しておくこと
 
-  ```ts
-  // TODO: API仕様未確定のため保留
-  // 呼び出し側修正完了後に再有効化予定（2025/11/10に確認）
-  // const result = await callNewApi();
-  ```
+    ```ts
+    // TODO: API仕様未確定のため保留
+    // 呼び出し側修正完了後に再有効化予定（2025/11/10に確認）
+    // const result = await callNewApi();
+    ```
 - **[MUST]** コメントには「コードからは読み取れない意図や理由」を書く
   - コードの内容を説明（≒日本語訳）するために書くものではない
 
-  BAD:
-  ```ts
-  // ユーザーデータを取得する
-  const getUserData = () => api.get('/user/data')
+    BAD:
+    ```ts
+    // ユーザーデータを取得する
+    const getUserData = () => api.get('/user/data')
 
-  // 変数iをインクリメントする
-  for (let i = 0; i < 10; i++) {}
-  ```
+    // 変数iをインクリメントする
+    for (let i = 0; i < 10; i++) {}
+    ```
 
-  GOOD:
-  ```ts
-  // バックエンド仕様上、nullを許容する必要があるため、空文字ではなくnullを返す
-  const getUserName = (id: string): string | null => {
-    // DB制約の都合で null を明示的に返す
-    return userMap[id] ?? null;
-  }
+    GOOD:
+    ```ts
+    // バックエンド仕様上、nullを許容する必要があるため、空文字ではなくnullを返す
+    const getUserName = (id: string): string | null => {
+      // DB制約の都合で null を明示的に返す
+      return userMap[id] ?? null;
+    }
 
-  // キャッシュにより挙動が変わるので、処理前にキャッシュをクリアする
-  // ※性能劣化のトリガーになりうるので頻繁に呼ばないこと
-  invalidateCache()
-  ```
+    // キャッシュにより挙動が変わるので、処理前にキャッシュをクリアする
+    // ※性能劣化のトリガーになりうるので頻繁に呼ばないこと
+    invalidateCache()
+    ```
 
 - **[SHOULD]** 必要に応じてJSDocコメントを使用する
   - 関数にJSDocコメントを使用するとIDE上で関数の概要をホバー表示できるため助けになる
   - もちろん全関数にJSDocコメントを付与する必要はない（例えば引数の多い関数などに使用するとよい）
 
-  ```ts
-  /**
-   * 商品情報を取得する
-   * @param productId 商品ID
-   * @returns 商品情報（存在しない場合はnull）
-   */
-  const fetchProduct = async (productId: string): Promise<Product | null> => {
-    /* 処理 */
-  }
-  ```
+    ```ts
+    /**
+    * 商品情報を取得する
+    * @param productId 商品ID
+    * @returns 商品情報（存在しない場合はnull）
+    */
+    const fetchProduct = async (productId: string): Promise<Product | null> => {
+      /* 処理 */
+    }
+    ```
 
 - **[SHOULD]** `TODO:`や`FIXME:`といったコメントを使用する場合は、必ず明確な目的を記載する
   - また、このようなコメントはIDE上で管理対象とすることも可能なので必要に応じて活用する
   - 一緒にIssueや課題管理番号も紐づけると、grep時に便利な場合もある
 
-  ```
-  TODO: ページング対応の追加 課題管理番号: ADE-025
-  FIXME: 暫定対応、API側修正完了後にこの処理は削除予定
-  ```
+    ```
+    TODO: ページング対応の追加 課題管理番号: ADE-025
+    FIXME: 暫定対応、API側修正完了後にこの処理は削除予定
+    ```
 
 - **[MUST]** コード上に「作成者」「更新者」などの情報は記載しない
   - これらはGitHubで追跡可能なため、重複情報となり無駄なメンテナンスコストとなる
   - 複数人で編集された場合に、誰がいつ更新したのかの整合性が崩れる
   - コメント更新漏れにより、嘘の履歴が残るリスクが有る
 
-  > 監査などで、どうしても履歴コメントが必要な場合はコメントではなくファイルヘッダテンプレート、または自動スクリプトで自動化して機械的に記載されるようにすること
+    > 監査などで、どうしても履歴コメントが必要な場合はコメントではなくファイルヘッダテンプレート、または自動スクリプトで自動化して機械的に記載されるようにすること
 
 ## 2.1 TypeScript全般のコーディングスタイル
 ### 2.1.1 型について
@@ -567,46 +571,46 @@ src/
   - とくに `enum` はトランスパイル後のコード肥大化やstrictチェック崩壊の原因になりやすい
   - APIレスポンス等では `enum` よりstring literalのほうが型推論も柔軟に対応できる
 
-  BAD:
-  ```ts
-  // JSでバイナリ化されるので非推奨
-  enum UserRoleEnum {
-    ADMIN = 'ADMIN',
-    USER = 'USER',
-    GUEST = 'GUEST',
-  }
-  ```
+    BAD:
+    ```ts
+    // JSでバイナリ化されるので非推奨
+    enum UserRoleEnum {
+      ADMIN = 'ADMIN',
+      USER = 'USER',
+      GUEST = 'GUEST',
+    }
+    ```
 
-  GOOD:
-  ```ts
-  type Role = 'admin' | 'user' | 'guest'
+    GOOD:
+    ```ts
+    type Role = 'admin' | 'user' | 'guest'
 
-  function hasPermission(role: Role): boolean {
-    return role === 'admin'
-  }
-  ```
+    function hasPermission(role: Role): boolean {
+      return role === 'admin'
+    }
+    ```
 
 ### 2.1.5 関数と副作用について
 - **[MUST]**「ロジック」と「副作用（API/DOM操作など）」を一つの処理に同居させない
   - 副作用を外に追い出すだけで、再利用性とテスタビリティが上がる
 
-  BAD:
-  ```ts
-  // vue内で直書きしている
-  onMounted(async () => {
-    const res = await axios.get('/users')
-    user.value = res.data
-  })
-  ```
+    BAD:
+    ```ts
+    // vue内で直書きしている
+    onMounted(async () => {
+      const res = await axios.get('/users')
+      user.value = res.data
+    })
+    ```
 
-  GOOD:
-  ```ts
-  // composables/useFetchUser.ts
-  export const useFetchUser = async (id: string): Promise<UserDTO> => {
-    const res = await api.get(`/users/${id}`)
-    return res.data
-  }
-  ```
+    GOOD:
+    ```ts
+    // composables/useFetchUser.ts
+    export const useFetchUser = async (id: string): Promise<UserDTO> => {
+      const res = await api.get(`/users/${id}`)
+      return res.data
+    }
+    ```
 
 ### 2.1.6 import
 - **[MUST]** 読みやすくするためと、diff時の見やすさのために、以下のグループ順で統一する
@@ -727,161 +731,161 @@ src/
   - 読み取り専用の値は`v-model`ではなく`:value`または`{{ }}`で表現する
   - `v-model`は「入力と出力が存在する」ケースに限定すること
 
-  BAD:
-  ```html
-  <!-- 表示専用なのにv-modelしている -->
-  <el-input v-model="formData.juchuHeaderData.catalogName" readonly />
+    BAD:
+    ```html
+    <!-- 表示専用なのにv-modelしている -->
+    <el-input v-model="formData.juchuHeaderData.catalogName" readonly />
 
-  <!-- 再描画や子更新でも無駄にwatchが走る -->
-  ```
+    <!-- 再描画や子更新でも無駄にwatchが走る -->
+    ```
 
-  GOOD:
-  ```html
-  <!-- 純粋に表示したいだけならバインド or プレーン表示でよい -->
-  <el-input :value="formData.juchuHeaderData.catalogName" readonly />
-  <!-- または -->
-  <span>{{ formData.juchuHeaderData.catalogName }}</span>
-  ```
+    GOOD:
+    ```html
+    <!-- 純粋に表示したいだけならバインド or プレーン表示でよい -->
+    <el-input :value="formData.juchuHeaderData.catalogName" readonly />
+    <!-- または -->
+    <span>{{ formData.juchuHeaderData.catalogName }}</span>
+    ```
 
 - **[MUST]** `<input>`や`<select>`など、UI入力値を1対1で扱うときは`v-model`を使用する
   - コンポーネントが単一の値を管理するときに限定する
-  ```html
-  <el-input v-model="userName" />
-  <el-checkbox v-model="isActive" />
-  ```
+    ```html
+    <el-input v-model="userName" />
+    <el-checkbox v-model="isActive" />
+    ```
 
 - **[MUST]** 複数の値を扱う場合は `v-model:xxx` 構文で命名して明示する
   - 例: `v-model:checked` / `v-model:dateRange` / `v-model:selectedItem`
 
-  ```html
-  <!-- Parent.vue -->
-  <date-picker v-model:start="dateRange.start" v-model:end="dateRange.end" />
+    ```html
+    <!-- Parent.vue -->
+    <date-picker v-model:start="dateRange.start" v-model:end="dateRange.end" />
 
-  <!-- DatePicker.vue -->
-  <script setup lang="ts">
-  defineProps<{ start: string; end: string }>()
-  defineEmits(['update:start', 'update:end'])
-  </script>
-  ```
+    <!-- DatePicker.vue -->
+    <script setup lang="ts">
+    defineProps<{ start: string; end: string }>()
+    defineEmits(['update:start', 'update:end'])
+    </script>
+    ```
 
-  > 複数の双方向データを持つ場合、`v-model`を明示的に名前付きで扱うことで
-  > 可読性と責務の分離を保ちやすくなる（公式推奨）
+    > 複数の双方向データを持つ場合、`v-model`を明示的に名前付きで扱うことで
+    > 可読性と責務の分離を保ちやすくなる（公式推奨）
 
 - **[MUST]** 再利用が可能な"入力系"子コンポーネントを使用する場合は`v-model`を使用する
   - ただし、「`v-model`を使用する = `modelValue`を`props`として受け取る」という理解が前提となる
   - 子コンポーネントには`props.modelValue`と`emit('update:modelValue')`をセットで実装すること
   - 1入力1出力のシンプルな単一責務に限定する
 
-  ```html
-  <!-- ChildInput.vue -->
-  <template>
-    <el-input
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event)"
-    />
-  </template>
-  <script setup lang="ts">
-  defineProps<{ modelValue: string }>()
-  defineEmits(['update:modelValue'])
-  </script>
-  ```
+    ```html
+    <!-- ChildInput.vue -->
+    <template>
+      <el-input
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event)"
+      />
+    </template>
+    <script setup lang="ts">
+    defineProps<{ modelValue: string }>()
+    defineEmits(['update:modelValue'])
+    </script>
+    ```
 
 - **[MUST]** `v-model`を使用する場合は、必ず子コンポーネント側で`emit`を行う
   - emitを行わない = propsを直接書き換えているのと同等
   - 値の更新は親の責務であり、子はあくまで通知役に徹する
   - 直接propsを書き換えるとVueの警告が発生し、リアクティブの整合性も壊れる
 
-  BAD:<br>
-  ```html
-  <!-- Parent.vue -->
-  <child-input v-model="userName" />
-
-  <!-- ChildInput.vue -->
-  <template>
-    <el-input v-model="modelValue" />
-  </template>
-
-  <script setup lang="ts">
-  defineProps<{ modelValue: string }>()
-  // emitしてない -> propsを勝手に書き換えてるだけ
-  </script>
-  ```
-
-  ↑ このBADの例は、動作はするがイベントが「親に伝わってない」<br>
-  結果、親が再レンダリングされた瞬間に値が巻き戻る、または消えるという事象が発生する可能性がある
-
-  GOOD:
-  ```html
-  <!-- Parent.vue -->
-  <child-input v-model="userName" />
-
-  <script setup lang="ts">
-  const userName = ref('')
-  </script>
-
-  <!-- ChildInput.vue -->
-  <template>
-    <el-input
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event)"
-    />
-  </template>
-
-  <script setup lang="ts">
-  defineProps<{ modelValue: string }>()
-  defineEmits(['update:modelValue'])
-  </script>
-  ```
-
-  > v-modelの正体はあくまでも、`props`で受け取り、`emit`で返すというもの<br>
-  > 「一方向のデータフロー × 通知」で成り立ってるという意識を持つことが重要
-
-    **[参考程度]**`@vueuse/core`の`useVModel`を使用すると`props`+`emit`のボイラープレートコードを隠蔽することができる（慣れていないとちょっと分かりづらいかも）
+    BAD:<br>
     ```html
+    <!-- Parent.vue -->
+    <child-input v-model="userName" />
+
     <!-- ChildInput.vue -->
     <template>
-      <el-input v-model="localValue" />
+      <el-input v-model="modelValue" />
     </template>
 
     <script setup lang="ts">
-    const props = defineProps<{ modelValue: string }>()
-    const emit = defineEmits(['update:modelValue'])
-    const localValue = useVModel(props, 'modelValue', emit)
+    defineProps<{ modelValue: string }>()
+    // emitしてない -> propsを勝手に書き換えてるだけ
     </script>
     ```
+
+    ↑ このBADの例は、動作はするがイベントが「親に伝わってない」<br>
+    結果、親が再レンダリングされた瞬間に値が巻き戻る、または消えるという事象が発生する可能性がある
+
+    GOOD:
+    ```html
+    <!-- Parent.vue -->
+    <child-input v-model="userName" />
+
+    <script setup lang="ts">
+    const userName = ref('')
+    </script>
+
+    <!-- ChildInput.vue -->
+    <template>
+      <el-input
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event)"
+      />
+    </template>
+
+    <script setup lang="ts">
+    defineProps<{ modelValue: string }>()
+    defineEmits(['update:modelValue'])
+    </script>
+    ```
+
+    > v-modelの正体はあくまでも、`props`で受け取り、`emit`で返すというもの<br>
+    > 「一方向のデータフロー × 通知」で成り立ってるという意識を持つことが重要
+
+      **[参考程度]**`@vueuse/core`の`useVModel`を使用すると`props`+`emit`のボイラープレートコードを隠蔽することができる（慣れていないとちょっと分かりづらいかも）
+      ```html
+      <!-- ChildInput.vue -->
+      <template>
+        <el-input v-model="localValue" />
+      </template>
+
+      <script setup lang="ts">
+      const props = defineProps<{ modelValue: string }>()
+      const emit = defineEmits(['update:modelValue'])
+      const localValue = useVModel(props, 'modelValue', emit)
+      </script>
+      ```
 
 - **[MUST]** 直接データ構造（オブジェクト）を`v-model`でバインドしてはならない
   - 部分更新がどこからでも発生し、依存追跡が不明確になる
   - 無限更新、パフォーマンス劣化、state破壊の温床になる
 
-  BAD:
-  ```html
-  <my-component v-model="formData" />
+    BAD:
+    ```html
+    <my-component v-model="formData" />
 
-  <script>
-    const formData = reactive({
-      header: {
-        tokuiCD: "",
-        tokuiName: "",
+    <script>
+      const formData = reactive({
+        header: {
+          tokuiCD: "",
+          tokuiName: "",
+          // 以下たくさん
+        },
+        total,
         // 以下たくさん
-      },
-      total,
-      // 以下たくさん
-    })
-  </script>
-  ```
+      })
+    </script>
+    ```
 
-  GOOD:
-  子コンポーネント側に明示的に`props` + `emits`で伝達を行うようにする
-  ```html
-  <my-component :formData="formData" @change="updateForm" />
-  <script setup lang="ts">
-  const formData = reactive({ ... })
+    GOOD:
+    子コンポーネント側に明示的に`props` + `emits`で伝達を行うようにする
+    ```html
+    <my-component :formData="formData" @change="updateForm" />
+    <script setup lang="ts">
+    const formData = reactive({ ... })
 
-  const updateForm = (partial) => {
-    Object.assign(formData, partial) // 明示的な部分更新
-  }
-  ```
+    const updateForm = (partial) => {
+      Object.assign(formData, partial) // 明示的な部分更新
+    }
+    ```
 
 
 - **[MUST]** ネストされたオブジェクトへの直接バインドは禁止する
@@ -891,84 +895,84 @@ src/
     > もうすこし正確にいうと・・・<br>
     >` reactive()`でラップしたオブジェクトは、ネスト内のプロパティ再代入をトラッキングできない（つまり、再代入ではなくプロパティ書き換えが必要になる）
 
-  BAD:
-  ```html
-  <el-input v-model="formData.juchuHeaderData.catalogCD" />
-  ```
+    BAD:
+    ```html
+    <el-input v-model="formData.juchuHeaderData.catalogCD" />
+    ```
 
-  GOOD:
-  ```html
-  <!-- 影響範囲を狭めるためにラッパーを作成する -->
-  <el-input v-model="catalogCD" />
+    GOOD:
+    ```html
+    <!-- 影響範囲を狭めるためにラッパーを作成する -->
+    <el-input v-model="catalogCD" />
 
-  <script setup>
-  const catalogCD = computed({
-    get: () => formData.juchuHeaderData.catalogCD,
-    set: (val) => formData.juchuHeaderData.catalogCD = val,
-  })
-  </script>
-  ```
-  もしくは
-  ```html
-  <el-input v-model="catalogCD" />
+    <script setup>
+    const catalogCD = computed({
+      get: () => formData.juchuHeaderData.catalogCD,
+      set: (val) => formData.juchuHeaderData.catalogCD = val,
+    })
+    </script>
+    ```
+    もしくは
+    ```html
+    <el-input v-model="catalogCD" />
 
-  <script setup>
-  const catalogCD = ref(formData.juchuHeaderData.catalogCD)
-  watch(catalogCD, val => (formData.juchuHeaderData.catalogCD = val))
-  </script>
-  ```
+    <script setup>
+    const catalogCD = ref(formData.juchuHeaderData.catalogCD)
+    watch(catalogCD, val => (formData.juchuHeaderData.catalogCD = val))
+    </script>
+    ```
 
 - **[MUST]** `Store`を直接`v-model`にバインドしてはならない
   - `Store`はアプリケーション全体の単一ソース（Single Source of Truth）であり、双方向バインドを行うと状態の責任範囲が不明確になる
   - コンポーネント側で直接更新が走ると、他の監視ロジックや`computed`依存が破壊される危険性がある
   - `Store`の更新は必ず明示的なアクション（メソッド呼び出し・`emit`）経由で行う
 
-  BAD:
-  ```html
-  <!-- 親・子どちらでもStoreの値を直接v-modelで更新している -->
-  <el-input v-model="globalStore.userName" />
+    BAD:
+    ```html
+    <!-- 親・子どちらでもStoreの値を直接v-modelで更新している -->
+    <el-input v-model="globalStore.userName" />
 
-  <script setup lang="ts">
-  import { useGlobalStore } from '@/store/globalStore'
+    <script setup lang="ts">
+    import { useGlobalStore } from '@/store/globalStore'
 
-  const globalStore = useGlobalStore()
-  // これにより、Storeのstateが直接破壊される
-  </script>
-  ```
+    const globalStore = useGlobalStore()
+    // これにより、Storeのstateが直接破壊される
+    </script>
+    ```
 
-  GOOD:
-  ```html
-  <!-- 一時変数を経由し、emitやメソッド経由でStoreを更新する -->
-  <el-input v-model="userName" @blur="globalStore.setUserName(userName)" />
+    GOOD:
+    ```html
+    <!-- 一時変数を経由し、emitやメソッド経由でStoreを更新する -->
+    <el-input v-model="userName" @blur="globalStore.setUserName(userName)" />
 
-  <script setup lang="ts">
-  import { useGlobalStore } from '@/store/globalStore'
+    <script setup lang="ts">
+    import { useGlobalStore } from '@/store/globalStore'
 
-  const globalStore = useGlobalStore()
-  const userName = ref(globalStore.userName)
+    const globalStore = useGlobalStore()
+    const userName = ref(globalStore.userName)
 
-  // Storeの値変更は明示的に行う
-  function updateName() {
-    globalStore.setUserName(userName.value)
-  }
-  </script>
-  ```
-  または(双方向バインドっぽくしたいなら)
-  ```html
-  <!-- computedを利用して明示的にgetter/setterを定義 -->
-  <el-input v-model="userName" />
+    // Storeの値変更は明示的に行う
+    function updateName() {
+      globalStore.setUserName(userName.value)
+    }
+    </script>
+    ```
+    または(双方向バインドっぽくしたいなら)
+    ```html
+    <!-- computedを利用して明示的にgetter/setterを定義 -->
+    <el-input v-model="userName" />
 
-  <script setup lang="ts">
-  import { useGlobalStore } from '@/store/globalStore'
+    <script setup lang="ts">
+    import { useGlobalStore } from '@/store/globalStore'
 
-  const globalStore = useGlobalStore()
+    const globalStore = useGlobalStore()
 
-  const userName = computed({
-    get: () => globalStore.userName,
-    set: (val) => globalStore.setUserName(val),
-  })
-  </script>
-  ```
+    const userName = computed({
+      get: () => globalStore.userName,
+      set: (val) => globalStore.setUserName(val),
+    })
+    </script>
+    ```
 
 #### v-forの使い方
 - **[MUST]** 必ず `key` と同時に使用する
@@ -1170,26 +1174,26 @@ src/
   - 小さく分割した `computed` 再利用性が高い
   - 再利用を行わない場合においても、人間が理解しやすい + テストも書きやすくなるため、なるべく小さい単位に分ける
 
-  BAD:
-  ```ts
-  const price = computed(() => {
-    const basePrice = manufactureCost.value / (1 - profitMargin.value)
-    return basePrice - basePrice * (discountPercent.value || 0)
-  })
-  ```
+    BAD:
+    ```ts
+    const price = computed(() => {
+      const basePrice = manufactureCost.value / (1 - profitMargin.value)
+      return basePrice - basePrice * (discountPercent.value || 0)
+    })
+    ```
 
-  GOOD:
-  ```ts
-  const basePrice = computed(
-    () => manufactureCost.value / (1 - profitMargin.value)
-  )
+    GOOD:
+    ```ts
+    const basePrice = computed(
+      () => manufactureCost.value / (1 - profitMargin.value)
+    )
 
-  const discount = computed(
-    () => basePrice.value * (discountPercent.value || 0)
-  )
+    const discount = computed(
+      () => basePrice.value * (discountPercent.value || 0)
+    )
 
-  const finalPrice = computed(() => basePrice.value - discount.value)
-  ```
+    const finalPrice = computed(() => basePrice.value - discount.value)
+    ```
 
 ## 2.3 Vueのcomposableのスタイル
 ### 2.3.1 命名規則
@@ -1239,70 +1243,70 @@ src/
   2. computed
   3. methods
 
-  ```ts
-  import { ref, computed } from 'vue'
-  import { getUserList } from '@/api/user'
-  import type { UserDTO } from '@/types/user'
+    ```ts
+    import { ref, computed } from 'vue'
+    import { getUserList } from '@/api/user'
+    import type { UserDTO } from '@/types/user'
 
-  export function useUser() {
-    const users = ref<UserDTO[]>([])
-    const loading = ref(false)
+    export function useUser() {
+      const users = ref<UserDTO[]>([])
+      const loading = ref(false)
 
-    const fetchUser = async() => {
-      loading.value = true
-      try {
-        const res = await getUserList()
-        users.value = res.data
-      } finally {
-        loading.value = false
+      const fetchUser = async() => {
+        loading.value = true
+        try {
+          const res = await getUserList()
+          users.value = res.data
+        } finally {
+          loading.value = false
+        }
+      }
+
+      const userCount = computed(() => users.value.length)
+
+      return {
+        users,
+        loading,
+        userCount,
+        fetchUser
       }
     }
-
-    const userCount = computed(() => users.value.length)
-
-    return {
-      users,
-      loading,
-      userCount,
-      fetchUser
-    }
-  }
-  ```
+    ```
 
 - **[MUST]** composables内でUI操作をしてはならない
   - UIライブラリに依存すると、単体テストが行えなくなる
 
-  BAD:
-  ```ts
-  import { ElMessage } from 'element-plus'
+    BAD:
+    ```ts
+    import { ElMessage } from 'element-plus'
 
-  export function useLogin() {
-    const login = async () => {
-      try {
-        // ...
-      } catch (e) {
-        // これはUI層の責務
-        ElMessage.error('ログイン失敗！')
+    export function useLogin() {
+      const login = async () => {
+        try {
+          // ...
+        } catch (e) {
+          // これはUI層の責務
+          ElMessage.error('ログイン失敗！')
+        }
       }
     }
-  }
-  ```
+    ```
 
-  GOOD:
-  ```ts
-  // useLogin.ts
-  // "純粋な"ログイン処理のみを記載
-  export function useLogin() {
-    const error = ref<string | null>(null)
-    const login = async () => { /* ... */ }
-    return { login, error }
-  }
+    GOOD:
+    ```ts
+    // useLogin.ts
+    // "純粋な"ログイン処理のみを記載
+    export function useLogin() {
+      const error = ref<string | null>(null)
+      const login = async () => { /* ... */ }
+      return { login, error }
+    }
 
-  // Login.vue
-  const { login, error } = useLogin()
-  // メッセージ表示はUIで行う
-  watch(error, msg => msg && ElMessage.error(msg))
-  ```
+    // Login.vue
+    const { login, error } = useLogin()
+    // メッセージ表示はUIで行う
+    watch(error, msg => msg && ElMessage.error(msg))
+    ```
 
 - **[SHOULD]** composable間で依存する場合は"上位が下位を呼ぶ"構造とする
   ```bash
@@ -1317,27 +1321,27 @@ src/
 
 - **[MUST]** `useXxx` の戻り値には必ず型をつける
   - 型を記載することで、IDE補完が効く・単体テストでMock化しやすい・自動ドキュメント化に使えるようになる
-  ```ts
-  export function useUser(): {
-    users: Ref<UserDTO[]>
-    loading: Ref<boolean>
-    fetchUser: () => Promise<void>
-  } {
-  // ...
-  }
-  ```
+    ```ts
+    export function useUser(): {
+      users: Ref<UserDTO[]>
+      loading: Ref<boolean>
+      fetchUser: () => Promise<void>
+    } {
+    // ...
+    }
+    ```
 
 - **[MUST]** 副作用（watchやイベント）はreturn前に完結させる
   - return後に副作用があるとライフサイクルの制御が難しくなる
-  ```ts
-  export function useScrollSync(target: Ref<HTMLElement | null>) {
-    const position = ref(0)
-    watch(target, (el) => {
-      if (el) el.addEventListener('scroll', () => position.value = el.scrollTop)
-    })
-    return { position }
-  }
-  ```
+    ```ts
+    export function useScrollSync(target: Ref<HTMLElement | null>) {
+      const position = ref(0)
+      watch(target, (el) => {
+        if (el) el.addEventListener('scroll', () => position.value = el.scrollTop)
+      })
+      return { position }
+    }
+    ```
 
 ## 2.4 Pinia Storeのスタイル
 Piniaは、Vue公式の状態管理ライブラリ<br>
@@ -1358,12 +1362,12 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
 - **[MUST]** 以下のような場面で、Piniaの使用を検討すること
   - 万能なものと思わずにあくまでも **「共有状態のキャッシュ置き場」** 程度の感覚で使用すると良い
 
-  | 使用すべき場面                                     | 例                                                     |
-  | -------------------------------------------------- | ------------------------------------------------------ |
-  | 複数画面・複数コンポーネントで同じデータを扱う場合 | ユーザー認証、認証トークン、共通設定（権限など）       |
-  | 状態をまたいでAPI呼び出しの結果を再利用したい場合  | 抽出条件・抽出結果の保持、モーダルの入力内容の保持など |
-  | アプリ全体のグローバル状態管理が必要な場合         | ログイン状態、通知管理など                             |
-  | 非同期処理+状態更新を一箇所に集約したい場合        | 共通エラーハンドリングなど                             |
+    | 使用すべき場面                                     | 例                                                     |
+    | -------------------------------------------------- | ------------------------------------------------------ |
+    | 複数画面・複数コンポーネントで同じデータを扱う場合 | ユーザー認証、認証トークン、共通設定（権限など）       |
+    | 状態をまたいでAPI呼び出しの結果を再利用したい場合  | 抽出条件・抽出結果の保持、モーダルの入力内容の保持など |
+    | アプリ全体のグローバル状態管理が必要な場合         | ログイン状態、通知管理など                             |
+    | 非同期処理+状態更新を一箇所に集約したい場合        | 共通エラーハンドリングなど                             |
 
 
 
@@ -1384,24 +1388,24 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
   - `getters`: 計算済み状態（`computed`に相当）
   - `actions`: 非同期処理・副作用・API呼び出しなど
 
-  ```ts
-  export const useUserStore = defineStore('user', {
-    state: (): UserState => ({
-      userInfo: null,
-      token: '',
-    }),
+    ```ts
+    export const useUserStore = defineStore('user', {
+      state: (): UserState => ({
+        userInfo: null,
+        token: '',
+      }),
 
-    getters: {
-      isLoggedIn: (state) => !!state.token,
-    },
-
-    actions: {
-      async fetchUserInfo() {
-        this.userInfo = await userApi.getInfo()
+      getters: {
+        isLoggedIn: (state) => !!state.token,
       },
-    },
-  })
-  ```
+
+      actions: {
+        async fetchUserInfo() {
+          this.userInfo = await userApi.getInfo()
+        },
+      },
+    })
+    ```
 
 #### ストアの命名規約
 - **[MUST]** 以下のルールに基づいて命名する
@@ -1426,20 +1430,20 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
   - コンポーネントではActionをよぶだけにする
   - 更新時はState → Getter経由で参照する
 
-  BAD:
-  Stateの直接更新はNG
-  ```html
-  <input v-model="store.someField" />
-  ```
+    BAD:
+    Stateの直接更新はNG
+    ```html
+    <input v-model="store.someField" />
+    ```
 
-  GOOD:
-  イベントに応じてActionを呼び出すことで更新を行う
-  ```html
-  <input
-    :value="store.someField"
-    @update="store.updateSomeField($event)"
-  />
-  ```
+    GOOD:
+    イベントに応じてActionを呼び出すことで更新を行う
+    ```html
+    <input
+      :value="store.someField"
+      @update="store.updateSomeField($event)"
+    />
+    ```
 
 #### 永続化（`pinia-plugin-persistedstate`）使用時
 - **[MUST]** 永続化対象は「セッション情報」「ユーザー設定」など最小限に限定する
@@ -1497,10 +1501,10 @@ src/tests
   - 業務ロジックが集中するので、必ず`src/tests/composables/`に対応ファイルを作成すること
   - 外部API・Store依存などがある場合はMock化してテストを実施する
 
-  ```
-  src/composables/views/P001/useP001.ts
-  → src/tests/composables/views/P001/useP001.spec.ts
-  ```
+    ```
+    src/composables/views/P001/useP001.ts
+    → src/tests/composables/views/P001/useP001.spec.ts
+    ```
 ### vueコンポーネント（.vueファイル）
 - **[MUST]** vueコンポーネントは **原則テスト不要** とする
   - UI描画やDOM挙動、イベントの発火、画面の遷移などを **打鍵テストで担保** する
@@ -1516,13 +1520,13 @@ src/tests
 - **[MUST]** utilsは **重要関数のみをテスト対象** とし、それ以外の関数はテスト不要とする
   - 判定基準は「if/elseや分岐・副作用があるか」と「外部依存があるか」で決定する
 
-  | 関数の性質                                  | テスト必要性            | 理由                                                                                                                            |
-  | ------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-  | 単純なリテラル返却<br>(例: `isEmpty(str)`)  | 不要                    | コストに対して効果が見合わない                                                                                                  |
-  | ヘルパー系<br>(例: `toUpperCase()`ラッパー) | 不要                    | コストに対して効果が見合わない                                                                                                  |
-  | 分岐ロジックあり<br>(例: `getStatus(code)`) | 必須                    | 条件分岐ミスを防ぐ                                                                                                              |
-  | 副作用あり<br>(例: `convertDateFormat()`)   | 必須                    | 入出力の安定性確保                                                                                                              |
-  | 外部依存あり<br>(例: `callApi()`)           | 必須 (外部依存はMock化) | 依存先がエラーとなった場合の挙動の検出のため<br>正常系については他レイヤー(FW/外部ライブラリ)が保証している場合は省略してもよい |
+    | 関数の性質                                  | テスト必要性            | 理由                                                                                                                            |
+    | ------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+    | 単純なリテラル返却<br>(例: `isEmpty(str)`)  | 不要                    | コストに対して効果が見合わない                                                                                                  |
+    | ヘルパー系<br>(例: `toUpperCase()`ラッパー) | 不要                    | コストに対して効果が見合わない                                                                                                  |
+    | 分岐ロジックあり<br>(例: `getStatus(code)`) | 必須                    | 条件分岐ミスを防ぐ                                                                                                              |
+    | 副作用あり<br>(例: `convertDateFormat()`)   | 必須                    | 入出力の安定性確保                                                                                                              |
+    | 外部依存あり<br>(例: `callApi()`)           | 必須 (外部依存はMock化) | 依存先がエラーとなった場合の挙動の検出のため<br>正常系については他レイヤー(FW/外部ライブラリ)が保証している場合は省略してもよい |
 
 #### 原則
 - 「処理の結果がif文で変わる、または外部依存があるもの」はテスト必須
@@ -1590,8 +1594,8 @@ src/tests
   - ただし、あくまでも目安の位置づけ
   - この数値を必ず満たしていなくてはならないというわけでは無いことに留意
 
-  | 種別        | 目標カバレッジ         |
-  | ----------- | ---------------------- |
-  | composables | 80%以上                |
-  | store       | 70%以上 (必要部分のみ) |
-  | utils       | 70%以上 (必要部分のみ) |
+    | 種別        | 目標カバレッジ         |
+    | ----------- | ---------------------- |
+    | composables | 80%以上                |
+    | store       | 70%以上 (必要部分のみ) |
+    | utils       | 70%以上 (必要部分のみ) |
