@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": true,
+  "vitest.commandLine": "npm run test:watch",
+  "vitest.include": ["src/tests/**/*.spec.ts"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "files.eol": "\n",
+  "eslint.validate": ["vue", "typescript", "javascript"],
+  "eslint.useFlatConfig": false,
+  "prettier.printWidth": 128,
+  "prettier.useTabs": false,
+  "prettier.semi": true,
+  "prettier.singleQuote": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "vue.features.semanticTokens": true,
+  "vue.inlayHints.missingProps": true
+}

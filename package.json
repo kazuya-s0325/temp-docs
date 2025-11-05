@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "lint": "eslint . --ext .ts,.vue",
+    "lint:fix": "eslint . --ext .ts,.vue --fix",
+    "format": "prettier . -w",
+    "type-check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  }
+}
