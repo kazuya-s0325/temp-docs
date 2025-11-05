@@ -72,7 +72,14 @@
   - [3.3 composablesのテスト方針](#33-composablesのテスト方針)
   - [3.4 store(Pinia)のテスト方針](#34-storepiniaのテスト方針)
   - [3.5 テスト命名規則](#35-テスト命名規則)
-  - [3.6 カバレッジ](#36-カバレッジ)
+  - [3.6 Mock化ガイドライン](#36-mock化ガイドライン)
+    - [基本方針](#基本方針)
+    - [Mock化の例](#mock化の例)
+      - [APIラッパーのMock例](#apiラッパーのmock例)
+      - [Store依存のMock例](#store依存のmock例)
+      - [Router依存のMock例](#router依存のmock例)
+    - [テスト時のポイント](#テスト時のポイント)
+  - [3.7 カバレッジ](#37-カバレッジ)
 
 # 1.基本部分
 ## 0. 全体方針
@@ -1588,8 +1595,100 @@ src/tests
 
 - **[SHOULD]** 複数条件をまとめてテストする場合は、describeを「関数単位」でまとめ、it句で条件を分ける
 
+## 3.6 Mock化ガイドライン
+### 基本方針
+- **[MUST]** `composables`/`store`のテストでは外部依存（API、router、storeなど）を必ずMock化すること
+- **[MUST]** `vi.fn()` または `vi.mock()` を用いてスタブ関数を生成し、依存関数の副作用を切り離すこと
+- **[SHOULD]** Mockの戻り値・動作パターン（正常/異常）を切り替えて、ロジック分岐を網羅する
 
-## 3.6 カバレッジ
+### Mock化の例
+やり方はいくつかある（と思う）が、ここではやり方の一つを示す<br>
+テスト対象のロジック分岐を網羅できれば、Mock化の手法自体は問わない
+
+#### APIラッパーのMock例
+```ts
+// テスト対象のcomposable
+import { fetchUser } from '@/api/userApi'
+
+export const useUser = () => {
+  const user = ref(null)
+  const getUser = async () => {
+    user.value = await fetchUser()
+  }
+  return { user, getUser }
+}
+
+
+// vitest側
+import { useUser } from '@/composables/useUser'
+
+// APIラッパーをmock化
+vi.mock('@/api/userApi', () => ({
+  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: 'Alice' })
+}))
+
+describe('useUser composable', () => {
+  it('ユーザー情報が取得できること', async () => {
+    const { user, getUser } = useUser()
+    await getUser()
+    expect(user.value.name).toBe('Alice')
+  })
+})
+```
+
+#### Store依存のMock例
+```ts
+// テスト対象のcomposable
+import { useUserStore } from '@/store/user'
+
+export const useAuth = () => {
+  const store = useUserStore()
+  const login = (token: string) => store.setToken(token)
+  return { login }
+}
+
+
+// vitest側
+vi.mock('@/store/user', () => ({
+  useUserStore: vi.fn(() => ({
+    setToken: vi.fn()
+  }))
+}))
+
+describe('useAuth composable', () => {
+  it('storeのsetTokenが呼ばれること', () => {
+    const { login } = useAuth()
+    const mockStore = useUserStore()
+    login('abc123')
+    expect(mockStore.setToken).toHaveBeenCalledWith('abc123')
+  })
+})
+```
+
+#### Router依存のMock例
+```ts
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    push: vi.fn()
+  })
+}))
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+router.push('/dashboard')
+expect(router.push).toHaveBeenCalledWith('/dashboard')
+```
+
+### テスト時のポイント
+| 項目                                    | 内容                                                                       |
+| --------------------------------------- | -------------------------------------------------------------------------- |
+| `vi.fn()`                               | 単一カンスのMock化（戻り値・呼び出し検証）                                 |
+| `vi.mock()`                             | モジュール全体をMock化                                                     |
+| `mockResolvedValue`/`mockRejectedValue` | Promiseの戻り値をエミュレート                                              |
+| `beforeEach`での初期化                  | 各テスト前に実行される初期化処理<br>状態がテスト間で汚染されないようにする |
+| `import`パスの指定                      | 絶対パス (@/api/...)を必ず正確に指定する                                   |
+
+## 3.7 カバレッジ
 - **[SHOULD]** カバレッジの基準（目安）は以下のとおりとする
   - ただし、あくまでも目安の位置づけ
   - この数値を必ず満たしていなくてはならないというわけでは無いことに留意
