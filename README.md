@@ -5,8 +5,7 @@
 | ----------------------------- | ---------------------------------- | ------------------------------------------------------------ |
 | ESLint                        | `dbaeumer.vscode-eslint`           | `.eslintrc`を読んで、Vue/TS含め保存時にLint修正＆警告表示    |
 | Prettier - Code Formatter     | `esbenp.prettier-vscode`           | `.prettierrc`に従って自動整形、保存時フォーマットは必須      |
-| Volar (Vue Language Features) | `Vue.volar`                        | Vue 3用の新言語サーバ、Composition API／script setup対応     |
-| TypeScript Vue Plugin (Volar) | `Vue.vscode-typescript-vue-plugin` | Volarと一緒にTS連携強化、`.vue`ファイル内TS補完を正確にする  |
+| Vue (Official)                | `Vue.volar`                        | Vue 3用の新言語サーバ、Composition API／script setup対応     |
 | Vitest                        | `ZixuanChen.vitest-explorer`       | サイドバーでテスト実行・結果確認、`vi.mock()` 等の補完もあり |
 | Error Lens                    | `usernamehw.errorlens`             | ESLint／TSエラーをその場で強調表示、赤線より見やすい         |
 | EditorConfig for VS Code      | `EditorConfig.EditorConfig`        | `.editorconfig`に従ってインデントや改行統一                  |
