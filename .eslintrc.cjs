@@ -62,7 +62,7 @@ module.exports = {
 
     /* Vue（規約反映）*/
     // Composition API / script setup 強制 & Option API禁止
-    "vue/component-api-style": ["error", ["script-setup", "composition"]], // :contentReference[oaicite:8]{index=8}
+    "vue/component-api-style": ["error", ["script-setup", "composition"]],
 
     // SFC上部タグ順を強制: <template> → <script> → <style>
     "vue/component-tags-order": [
@@ -72,9 +72,9 @@ module.exports = {
       },
     ],
 
-    // 属性の並び順（規約の順にほぼ一致させる） → shouldなので場合によっては外すor"warn"にしてもよい
+    // 属性の並び順（規約の順に一致させる）
     "vue/attributes-order": [
-      "error",
+      "warn",
       {
         order: [
           "DEFINITION", // is
@@ -96,9 +96,9 @@ module.exports = {
     "vue/first-attribute-linebreak": ["error", { multiline: "below" }],
     "vue/max-attributes-per-line": ["error", { singleline: 1, multiline: 1 }],
 
-    // ディレクティブ短縮記法（: / @ / #）を強制（shouldなので外してもよい）
-    "vue/v-bind-style": ["error", "shorthand"],
-    "vue/v-on-style": ["error", "shorthand"],
+    // ディレクティブ短縮記法（: / @ / #）を強制(ただしwarnに留める)
+    "vue/v-bind-style": ["warn", "shorthand"],
+    "vue/v-on-style": ["warn", "shorthand"],
 
     // テンプレ内の命名規約・記法
     "vue/prop-name-casing": ["error", "camelCase"], // propsはcamelCase定義
@@ -119,7 +119,7 @@ module.exports = {
     // インデント：2スペース
     "vue/html-indent": ["error", 2],
 
-    // v-htmlは原則使わない（規約では非推奨）
+    // v-htmlは原則使わない（規約では非推奨、安全が確認できていれば使用してもOK）
     "vue/no-v-html": "warn",
 
     // script setup の未使用変数誤判定回避
@@ -150,7 +150,7 @@ module.exports = {
     "import/no-unresolved": "off",
 
     /* Promise/コメント */
-    "promise/prefer-await-to-then": "error", // async/awaitへ（規約の非同期方針に合致）
+    "promise/prefer-await-to-then": "error", // async/awaitへ（規約の非同期方針）
     "sonarjs/no-commented-out-code": "error", // コメントアウトを禁止（規約）
     "prettier/prettier": "error",
   },
