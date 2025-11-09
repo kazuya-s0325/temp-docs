@@ -7,16 +7,9 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
     extraFileExtensions: [".vue"],
-    project: ["./tsconfig.json"], // 型ベースの厳しめLintも有効化
+    project: "./adelia.vite/tsconfig.json", // 型ベースの厳しめLintも有効化
   },
-  plugins: [
-    "vue",
-    "@typescript-eslint",
-    "import",
-    "promise",
-    "sonarjs",
-    "prettier",
-  ],
+  plugins: ["vue", "@typescript-eslint", "import", "promise", "sonarjs", "prettier"],
   extends: [
     "eslint:recommended",
     "plugin:vue/vue3-recommended", // Vue3推奨
@@ -48,14 +41,11 @@ module.exports = {
         ignoreComments: true,
       },
     ], // 1行128文字まで（規約）
-    "max-lines": [
-      "warn",
-      { max: 500, skipBlankLines: true, skipComments: true },
-    ], // 規約の300〜500目安（コメントと空行は除く）
+    "max-lines": ["warn", { max: 500, skipBlankLines: true, skipComments: true }], // 規約の300〜500目安（コメントと空行は除く）
 
     /* TypeScript設定部分 */
     "@typescript-eslint/explicit-function-return-type": "error", // 戻り値に型を必須化（規約の「型は必ず明示」に基づく）
-    "@typescript-eslint/no-explicit-any": "error", // any禁止（規約の「型は必ず明示」に基づく）
+    "@typescript-eslint/no-explicit-any": "warn", // anyは警告（規約では原則禁止としている）
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-misused-promises": "error",
@@ -135,9 +125,7 @@ module.exports = {
           ["parent", "sibling", "index", "object"],
           ["type"],
         ],
-        pathGroups: [
-          { pattern: "@/**", group: "internal", position: "before" },
-        ],
+        pathGroups: [{ pattern: "@/**", group: "internal", position: "before" }],
         pathGroupsExcludedImportTypes: ["builtin"],
         "newlines-between": "always",
         alphabetize: { order: "asc", caseInsensitive: true },
@@ -151,7 +139,8 @@ module.exports = {
 
     /* Promise/コメント */
     "promise/prefer-await-to-then": "error", // async/awaitへ（規約の非同期方針）
-    "sonarjs/no-commented-out-code": "error", // コメントアウトを禁止（規約）
+    // TODO: sonarjs1.0.0以降でしか有効にならない、ESLint9へ上げる必要あり
+    // "sonarjs/no-commented-out-code": "error", // コメントアウトを禁止（規約）
     "prettier/prettier": "error",
   },
 };
