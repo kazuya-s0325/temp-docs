@@ -141,6 +141,9 @@ module.exports = {
     "promise/prefer-await-to-then": "error", // async/awaitへ（規約の非同期方針）
     // TODO: sonarjs1.0.0以降でしか有効にならない、ESLint9へ上げる必要あり
     // "sonarjs/no-commented-out-code": "error", // コメントアウトを禁止（規約）
+
+    // Cognitive Complexityの閾値を15、warnに留める
+    "sonarjs/cognitive-complexity": ["warn", 15],
     "prettier/prettier": "error",
   },
 };
