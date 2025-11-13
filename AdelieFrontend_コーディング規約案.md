@@ -57,7 +57,7 @@
       - [ストアの命名規約](#ストアの命名規約)
       - [ストアの責務](#ストアの責務)
       - [一方向データフローの厳守](#一方向データフローの厳守)
-      - [永続化（`pinia-plugin-persistedstate`）使用時](#永続化pinia-plugin-persistedstate使用時)
+      - [永続化（ `pinia-plugin-persistedstate` ）使用時](#永続化-pinia-plugin-persistedstate-使用時)
       - [共通処理はcomposableへ](#共通処理はcomposableへ)
       - [その他禁止事項](#その他禁止事項)
 - [3. テスト方針](#3-テスト方針)
@@ -732,15 +732,19 @@
 内部的には`props` + `emit`で構成されている<br>
 安易に使用するとリアクティブ依存関係が不明確になる（データフローが追えなくなる）場合があるので、利用箇所を明確に制限する
 
-- `v-model`使用の原則
-  - `v-model`は単一値の入出力に限定して使用する
+極端な話 `v-model` は一切使用せず、`props` + `emits` で表記をするようにしても構わないし、むしろそうしたほうが値の流れが追いやすくデバッグがスムーズに進む側面もある
+
+つまり **使わないという選択肢も常に頭に入れておく** ことが必要
+
+- `v-model` 使用の原則
+  - `v-model` は単一値の入出力に限定して使用する
   - オブジェクト全体・複合データ・Store直参照などの双方向バインドは禁止する
   - 親子間のデータ連携には原則は`props` + `emit`で行い、必要に応じて`computed`で補助する
 
-- **[MUST]** 表示専用（ReadOnly）の項目に`v-model`を使用してはならない
+- **[MUST]** 表示専用（ReadOnly）の項目に `v-model` を使用してはならない
   - 双方向バインドの意味がなく、不要なリアクティブ監視が発生する
-  - 読み取り専用の値は`v-model`ではなく`:value`または`{{ }}`で表現する
-  - `v-model`は「入力と出力が存在する」ケースに限定すること
+  - 読み取り専用の値は `v-model` ではなく `:value` または `{{ }}` で表現する
+  - `v-model` は「入力と出力が存在する」ケースに限定すること
 
     BAD:
     ```html
@@ -758,7 +762,7 @@
     <span>{{ formData.juchuHeaderData.catalogName }}</span>
     ```
 
-- **[MUST]** `<input>`や`<select>`など、UI入力値を1対1で扱うときは`v-model`を使用する
+- **[MUST]** `<input>` や `<select>` など、UI入力値を1対1で扱うときは `v-model` を使用する
   - コンポーネントが単一の値を管理するときに限定する
     ```html
     <el-input v-model="userName" />
@@ -779,12 +783,12 @@
     </script>
     ```
 
-    > 複数の双方向データを持つ場合、`v-model`を明示的に名前付きで扱うことで
+    > 複数の双方向データを持つ場合、`v-model` を明示的に名前付きで扱うことで
     > 可読性と責務の分離を保ちやすくなる（公式推奨）
 
-- **[MUST]** 再利用が可能な"入力系"子コンポーネントを使用する場合は`v-model`を使用する
-  - ただし、「`v-model`を使用する = `modelValue`を`props`として受け取る」という理解が前提となる
-  - 子コンポーネントには`props.modelValue`と`emit('update:modelValue')`をセットで実装すること
+- **[MUST]** 再利用が可能な"入力系"子コンポーネントを使用する場合は `v-model` を使用する
+  - ただし、「 `v-model` を使用する = `modelValue` を `props` として受け取る」という理解が前提となる
+  - 子コンポーネントには `props.modelValue` と `emit('update:modelValue')` をセットで実装すること
   - 1入力1出力のシンプルな単一責務に限定する
 
     ```html
@@ -801,7 +805,7 @@
     </script>
     ```
 
-- **[MUST]** `v-model`を使用する場合は、必ず子コンポーネント側で`emit`を行う
+- **[MUST]** `v-model` を使用する場合は、必ず子コンポーネント側で `emit` を行う
   - emitを行わない = propsを直接書き換えているのと同等
   - 値の更新は親の責務であり、子はあくまで通知役に徹する
   - 直接propsを書き換えるとVueの警告が発生し、リアクティブの整合性も壊れる
@@ -848,10 +852,10 @@
     </script>
     ```
 
-    > v-modelの正体はあくまでも、`props`で受け取り、`emit`で返すというもの (糖衣構文に過ぎない)<br>
+    > v-modelの正体はあくまでも、`props`で受け取り、`emit`で返すというもの (強調するがただの糖衣構文に過ぎない)<br>
     > 「一方向のデータフロー × 通知」で成り立ってるという意識を持つことが重要
 
-      **[参考程度]**`@vueuse/core`の`useVModel`を使用すると`props`+`emit`のboilerplateコードを隠蔽することができる（慣れていないとちょっと分かりづらいかも）
+      **[参考程度]** `@vueuse/core` の `useVModel` を使用すると `props` + `emit` のboilerplateコードを隠蔽することができる（慣れていないとちょっと分かりづらいかも）
       ```html
       <!-- ChildInput.vue -->
       <template>
@@ -865,13 +869,13 @@
       </script>
       ```
 
-- **[MUST]** 直接データ構造（オブジェクト）を`v-model`でバインドしてはならない
+- **[MUST]** 直接データ構造（オブジェクト）を直接 `v-model` にバインドしてはならない
   - 部分更新がどこからでも発生し、依存追跡が不明確になる
   - 無限更新、パフォーマンス劣化、state破壊の温床になる
 
     BAD:
     ```html
-    <my-component v-model="formData" />
+    <child-form v-model="formData" />
 
     <script>
       const formData = reactive({
@@ -887,9 +891,9 @@
     ```
 
     GOOD:
-    子コンポーネント側に明示的に`props` + `emits`で伝達を行うようにする
+    子コンポーネント側に明示的に `props` + `emits` で伝達を行うようにする
     ```html
-    <my-component :formData="formData" @change="updateForm" />
+    <child-form :formData="formData" @change="updateForm" />
     <script setup lang="ts">
     const formData = reactive({ ... })
 
@@ -898,10 +902,86 @@
     }
     ```
 
+    GOOD:<br>
+    子コンポーネントは、各値を `props` で受けとり、`update:*` の `emits` と `computed` ラッパー（getter/setter） で同期する
+    ```html
+    <!-- 親コンポーネント -->
+    <child-form
+      :tokuiCD="formData.header.tokuiCD"
+      :tokuiName="formData.header.tokuiName"
+      :total="formData.total"
+      :address="formData.header.address"
+      <!-- 他にもたくさん -->
+      @update:tokuiCD="formData.header.tokuiCD = $event"
+      @update:tokuiName="formData.header.tokuiName = $event"
+      @update:total="formData.total = $event"
+      @update:address="formData.header.address = $event"
+      <!-- 他にもたくさん -->
+    />
+    <script setup>
+    const form = reactive({
+      header: {
+        tokuiCD: "",
+        tokuiName: "",
+        address: "",
+        // 以下たくさん
+      },
+      total: 0,
+      // 以下たくさん
+    })
+    </script>
+
+    <!-- 子コンポーネント -->
+    <template>
+      <el-input v-model="tokuiCD" />
+      <el-input v-model="address" />
+      <el-input v-model.number="total" />
+    </template>
+
+    <script setup lang="ts">
+    const props = defineProps({
+      tokuiCD: String,
+      tokuiName: String,
+      total: Number,
+      address: String,
+      // ...もちろん必要な数だけ増える
+    })
+
+    const emit = defineEmits([
+      "update:tokuiCD",
+      "update:tokuiName",
+      "update:total",
+      "update:address",
+      // ...こちらも必要なだけ増える
+    ])
+
+    // computedラッパーで双方向同期を"明示的に"！
+    const tokuiCD = computed({
+      get: () => props.tokuiCD,
+      set: (v) => emit("update:tokuiCD", v),
+    })
+
+    const address = computed({
+      get: () => props.address,
+      set: (v) => emit("update:address", v),
+    })
+
+    const total = computed({
+      get: () => props.total,
+      set: (v) => emit("update:total", v),
+    })
+    </script>
+    ```
+
+    > オブジェクトを丸ごと `v-model` で渡すぐらいなら、
+    > 30個の `props` + `emits` のほうが遥かに安全で生産的
+    >
+    > Vueでは **値の流れを明確にする** ことが最大の保守性であり、
+    > `props` を増やすことはコストではなく ドキュメント化された依存関係といえる
 
 - **[MUST]** ネストされたオブジェクトへの直接バインドは禁止する
   - 再代入時にリアクティブトラッキングが壊れる
-  - Vueの`reactive()`はネストオブジェクトの参照変更を検知できない場合がある
+  - Vueの `reactive()` はネストオブジェクトの参照変更を検知できない場合がある
 
     > もうすこし正確にいうと・・・<br>
     >`reactive()`でラップしたオブジェクトは、ネスト内のプロパティ再代入をトラッキングできない（つまり、再代入ではなくプロパティ書き換えが必要になる）
@@ -923,20 +1003,11 @@
     })
     </script>
     ```
-    もしくは
-    ```html
-    <el-input v-model="catalogCD" />
 
-    <script setup>
-    const catalogCD = ref(formData.juchuHeaderData.catalogCD)
-    watch(catalogCD, val => (formData.juchuHeaderData.catalogCD = val))
-    </script>
-    ```
-
-- **[MUST]** `Store`を直接`v-model`にバインドしてはならない
-  - `Store`はアプリケーション全体の単一ソース（Single Source of Truth）であり、双方向バインドを行うと状態の責任範囲が不明確になる
-  - コンポーネント側で直接更新が走ると、他の監視ロジックや`computed`依存が破壊される危険性がある
-  - `Store`の更新は必ず明示的なアクション（メソッド呼び出し・`emit`）経由で行う
+- **[MUST]** `Store` を直接 `v-model` にバインドしてはならない
+  - `Store` はアプリケーション全体の単一ソース（Single Source of Truth）であり、双方向バインドを行うと状態の責任範囲が不明確になる
+  - コンポーネント側で直接更新が走ると、他の監視ロジックや `computed` 依存が破壊される危険性がある
+  - `Store` の更新は必ず明示的なアクション（メソッド呼び出し・`emit` ）経由で行う
 
     BAD:
     ```html
@@ -1092,13 +1163,13 @@
   </ul>
   ```
 #### ロジックはcomposableへ
-- **[MUST]** Vueファイル（`.vue`）内のロジックは、基本的にすべて `composable` に外出しする<br>
+- **[MUST]** Vueファイル（ `.vue` ）内のロジックは、基本的にすべて `composable` に外出しする<br>
 - **[SHOULD]** `.vue` ファイルには「UIの制御」（イベントハンドラーなど）のみが存在しているという状態にする
 
   ここでいうロジックは主に以下のような処理を指す
   - APIの呼び出し
   - 状態管理
-  - バリデーション処理
+  - バリデーション処理（Element-Plusの `rules` なども含む）
   - 日付変換
   - etc...
 
@@ -1244,10 +1315,10 @@
 | `views/`      | 特定画面のコンポーネント専用のロジック<br>(抽出・保存処理、ダイアログ、モーダル、URLパラメータ取得など) |
 
 ### 2.3.3 composableのコーディングスタイル
-- **[MUST]** `ref`, `computed`, `watch`を内部完結させる
+- **[MUST]** `ref`, `computed`, `watch` を内部完結させる
 - **[MUST]** `export` は必ず `function use〇〇()`
-  - `変数export` は行わない
-- **[MUST]** 戻り値にUI要素は（ElMessageなど）決して含めない
+  - `変数export` は行わないこと
+- **[MUST]** 戻り値にUI要素は（例えばElMessageなど）決して含めない
   - 単体テストを行うことが難しくなるだけでなく、そもそも特定のUIを出す・出さないはテンプレート側の都合であってロジックとは本質的に無関係である
 - **[SHOULD]** returnで返すオブジェクトの順番は以下の通りにする
   1. state
@@ -1364,7 +1435,7 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
   - TypeScriptで安全に型補完・推論を活用
 
 - メリット
-  - Composition APIとの親和性が高く、setup()から直接利用できる
+  - Composition APIとの親和性が高く、`setup()` から直接利用できる
   - Vue DevToolsで状態を追える（デバッグしやすい）
   - `state`, `getters`, `actions`で責務が明確に分離できる
 
@@ -1396,7 +1467,7 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
 #### ストアの基本構成
 - **[MUST]** 各ストアは以下の3層構造で定義をする
   - `state`: 純粋データ（UI情報や副作用は含まない）
-  - `getters`: 計算済み状態（`computed`に相当）
+  - `getters`: 計算済み状態（ `computed` に相当）
   - `actions`: 非同期処理・副作用・API呼び出しなど
 
     ```ts
@@ -1430,11 +1501,11 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
 
 #### ストアの責務
 - **[MUST]** 1ストア = 1ドメイン単位とし、責務を1つだけに絞る
-- **[MUST]** グローバル設定は`globalStore`に集約する
+- **[MUST]** グローバル設定は `globalStore` に集約する
   - 例えばユーザーのセッション情報や認証情報など
 - **[SHOULD]** UI状態は持たせない
-  - 例えば、`isLoading`や`inputMode`といったUI状態の情報はコンポーネント側で管理する
-- **[SHOULD]** API呼び出しなどを行う場合は`actions`で統一する
+  - 例えば、`isLoading` や `inputMode` といったUI状態の情報はコンポーネント側で管理する
+- **[SHOULD]** API呼び出しなどを行う場合は `actions` で統一する
 
 #### 一方向データフローの厳守
 - **[MUST]** 一方向のデータフローを厳守する
@@ -1456,9 +1527,9 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
     />
     ```
 
-#### 永続化（`pinia-plugin-persistedstate`）使用時
+#### 永続化（ `pinia-plugin-persistedstate` ）使用時
 - **[MUST]** 永続化対象は「セッション情報」「ユーザー設定」など最小限に限定する
-- **[SHOULD]** パスワード・トークンなど機微情報は必ず`salt`付きで暗号化する、または永続化しないようにする
+- **[SHOULD]** パスワード・トークンなど機微情報は必ず `salt` 付きで暗号化する、または永続化しないようにする
 - **[SHOULD]** persist設定はストア内で完結する（外部ロジック混入禁止）
 
 #### 共通処理はcomposableへ
@@ -1466,23 +1537,23 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
   - 例えばAPIのリトライ処理、日付フォーマット関数など
 
 #### その他禁止事項
-- **[MUST]** コンポーネント内で`storeToRefs`せずに直参照をしない
-- **[MUST]** `composable`内からStoreを直接importしない
+- **[MUST]** コンポーネント内で `storeToRefs` せずに直参照をしない
+- **[MUST]** `composable` 内からStoreを直接importしない
   - 循環参照や、依存関係のねじれが発生しやすくなる
-  - 必要なら`inject/provide`や`props`経由で受け渡しする
-- **[MUST]** `Store`は無駄に増やさない
+  - 必要なら `inject/provide` や `props` 経由で受け渡しする
+- **[MUST]** `Store` は無駄に増やさない
   - 小さなローカル状態をPiniaに入れると、逆にスコープが曖昧となり、管理が複雑になる
   - 原則は「アプリ全体」、必要に応じて「機能単位」とすれば良い
 - **[MUST]** stateを直接操作しない
-  - mutation的なロジックは必ず`actions`を経由する
+  - mutation的なロジックは必ず `actions` を経由する
   - 直接代入を行うとデータフローが不透明となる
-- **[MUST]** `Store`内でのDOM操作は行わない
+- **[MUST]** `Store` 内でのDOM操作は行わない
   - piniaの状態管理という責務から逸脱してる
-- **[MUST]** 複数`Store`で同じデータを重複して持たない
+- **[MUST]** 複数 `Store` で同じデータを重複して持たない
   - ソースオブトゥルースが曖昧になる
 
 
-**※[参考] 一般的に`Pinia Store`と`composable`の棲み分けは以下のような形となる**
+**※[参考] 一般的に `Pinia Store` と `composable` の棲み分けは以下のような形となる**
 
   | 用途                         | 推奨手段      | 備考                     |
   | ---------------------------- | ------------- | ------------------------ |
@@ -1491,8 +1562,8 @@ Piniaは、Vue公式の状態管理ライブラリ<br>
 
 # 3. テスト方針
 ## 3.1 概要
-単体テストには`Vitest`を使用する<br>
-テストコードは`src/tests/`以下にまとめて配置を行い、テストの分散を防止・管理を一元化する
+単体テストには `Vitest` を使用する<br>
+テストコードは `src/tests/` 以下にまとめて配置を行い、テストの分散を防止・管理を一元化する
 
 ```
 src/tests
@@ -1509,7 +1580,7 @@ src/tests
 
 ### composables
 - **[MUST]** composablesに対しては **原則テスト必須** とする
-  - 業務ロジックが集中するので、必ず`src/tests/composables/`に対応ファイルを作成すること
+  - 業務ロジックが集中するので、必ず `src/tests/composables/` に対応ファイルを作成すること
   - 外部API・Store依存などがある場合はMock化してテストを実施する
 
     ```
@@ -1519,12 +1590,12 @@ src/tests
 ### vueコンポーネント（.vueファイル）
 - **[MUST]** vueコンポーネントは **原則テスト不要** とする
   - UI描画やDOM挙動、イベントの発火、画面の遷移などを **打鍵テストで担保** する
-    - `composable`に定義されているロジックは"正しく動くこと"自体はvitestで担保できているので、打鍵時は **操作の結果、期待されるタイミングでその処理が呼び出されること** を担保すればよい
+    - `composable` に定義されているロジックは"正しく動くこと"自体はvitestで担保できているので、打鍵時は **操作の結果、期待されるタイミングでその処理が呼び出されること** を担保すればよい
   - vitestではテンプレートテストの作成・保守コストが高く、また十分な効果も得られないと判断した
-    - `Cypress`による自動E2Eテストも検討したが、導入コストと作成・保守コストが高いと判断したため取り下げた
+    - `Cypress` による自動E2Eテストも検討したが、導入コストと作成・保守コストが高いと判断したため取り下げた
 
 ### store(Pinia)
-- **[MUST]** storeは`getter`、`action`に**業務ロジックが含まれている場合のみテスト対象**とする
+- **[MUST]** storeは `getter`、`action` に**業務ロジックが含まれている場合のみテスト対象**とする
   - stateのみの単純なデータ保持については、そもそものテスト対象が存在しないので除外する
 
 ### utils（共通関数）
@@ -1550,7 +1621,7 @@ src/tests
     - API呼び出し関数（axiosラッパー）
     - Storeアクセス（Pinia）
     - routerなどアプリ依存の外部モジュール
-- **[MUST]** リアクティブ変数は`ref`/`reactive`の動作を確認する
+- **[MUST]** リアクティブ変数は `ref` / `reactive` の動作を確認する
 
   例：
   ```ts
@@ -1566,7 +1637,7 @@ src/tests
   ```
 
 ## 3.4 store(Pinia)のテスト方針
-- **[MUST]** `getters`/`actions`のロジックを単体で検証
+- **[MUST]** `getters` / `actions` のロジックを単体で検証
 - **[MUST]** stateの初期値確認・更新結果をassert
 - **[MUST]** 外部API呼び出しはmock化する
 
@@ -1601,7 +1672,7 @@ src/tests
 
 ## 3.6 Mock化ガイドライン
 ### 基本方針
-- **[MUST]** `composables`/`store`のテストでは外部依存（API、router、storeなど）を必ずMock化すること
+- **[MUST]** `composables` / `store` のテストでは外部依存（API、router、storeなど）を必ずMock化すること
 - **[MUST]** `vi.fn()` または `vi.mock()` を用いてスタブ関数を生成し、依存関数の副作用を切り離すこと
 - **[SHOULD]** Mockの戻り値・動作パターン（正常/異常）を切り替えて、ロジック分岐を網羅する
 
@@ -1704,11 +1775,14 @@ expect(router.push).toHaveBeenCalledWith('/dashboard')
     | utils       | 70%以上 (必要部分のみ) |
 
 ## 3.8 テストの意義
-テストは「あるから安心」ではない<br>
-何を、なぜ、どう保証したいかを考えた結果として存在する<br>
-<br>
+テストコードは単なるコードの検証のためのコードではなく<br>
+実装されているコードの **"本当の"** 処理仕様を証明する **唯一のドキュメント** である
+
+また、テストは「あるから安心」ではない<br>
+何を、なぜ、どう保証したいかを考えた結果として存在する
+
 書くことが目的になったテストはノイズであり無駄なコストでしか無いが、<br>
-意味を持つテストはシステムの信頼性そのものになる
+**"意味を持つテスト"** はシステムの信頼性そのものになる
 
 # 4. FEシステム単体での動作保証
 - **[SHOULD]** **FEモジュール単体での動作を保証**すること
