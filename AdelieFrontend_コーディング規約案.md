@@ -940,10 +940,10 @@
 
     <script setup lang="ts">
     const props = defineProps({
-      tokuiCD: String,
-      tokuiName: String,
-      total: Number,
-      address: String,
+      tokuiCD: string,
+      tokuiName: string,
+      total: number,
+      address: string,
       // ...もちろん必要な数だけ増える
     })
 
